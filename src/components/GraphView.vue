@@ -3,40 +3,68 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Network } from 'vis-network'
-import axios from 'axios'
+import {getBipartite, getProjected} from "../services/graph.service.ts";
 
-async function loadGraph() {
-  const res = await axios.get('http://localhost:8000/api/graph/bipartite')
-  const { nodes, edges } = res.data
+const graphData = ref<Record<string, any>>({})
+const selectedGraph = ref<'bipartite' | 'projected'>('bipartite')
+let network: Network | null = null
 
-  console.log(res.data)
-
-  const formattedNodes = nodes.map((n: any) => ({
+function formatGraph(data: any) {
+  const formattedNodes = data.nodes.map((n: any) => ({
     id: n.id,
     label: n.id,
-    color: n.type === 'movie' ? 'orange' : n.gender === 'F' ? 'hotpink' : 'royalblue',
+    color:
+        n.type === 'movie'
+            ? 'orange'
+            : n.gender === 'F'
+                ? 'hotpink'
+                : n.gender === 'M'
+                    ? 'royalblue'
+                    : 'mediumorchid',
     shape: 'dot',
   }))
 
-  const formattedEdges = edges.map((e: any) => ({
+  const formattedEdges = data.edges.map((e: any) => ({
     from: e.source,
     to: e.target,
   }))
 
+  return { nodes: formattedNodes, edges: formattedEdges }
+}
+
+async function fetchGraphs() {
+  const [bipartiteRes, projectedRes] = await Promise.all([
+    getBipartite(),
+    getProjected(),
+  ])
+
+  graphData.value = {
+    bipartite: formatGraph(bipartiteRes.data),
+    projected: formatGraph(projectedRes.data),
+  }
+}
+
+function renderGraph() {
   const container = document.getElementById('graph')!
-  const data = { nodes: formattedNodes, edges: formattedEdges }
+  const { nodes, edges } = graphData.value[selectedGraph.value]
+  const data = { nodes, edges }
   const options = {
     nodes: { size: 10 },
     edges: { color: '#aaa' },
     physics: { stabilization: true },
   }
 
-  new Network(container, data, options)
+  if (network) {
+    network.setData(data)
+  } else {
+    network = new Network(container, data, options)
+  }
 }
 
-onMounted(() => {
-  loadGraph()
+onMounted(async () => {
+  await fetchGraphs()
+  renderGraph()
 })
 </script>
