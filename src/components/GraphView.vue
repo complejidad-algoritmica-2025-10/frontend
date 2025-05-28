@@ -1,5 +1,5 @@
 <template>
-  <div id="graph" style="height: 600px;"></div>
+  <div id="graph" style="width: 100%; height: 600px"></div>
 </template>
 
 <script setup lang="ts">
@@ -14,7 +14,7 @@ let network: Network | null = null
 function formatGraph(data: any) {
   const formattedNodes = data.nodes.map((n: any) => ({
     id: n.id,
-    label: n.id,
+    label: n.name,
     color:
         n.type === 'movie'
             ? 'orange'
