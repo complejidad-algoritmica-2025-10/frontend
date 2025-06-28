@@ -45,7 +45,7 @@ function renderGraph() {
   const options = {
     nodes: {
       shape: 'dot',
-      scaling: { min: 10, max: 30 }
+      scaling: { min: 1000, max: 2000 }
     },
     edges: {
       smooth: true,
@@ -53,7 +53,12 @@ function renderGraph() {
       color: '#ccc'
     },
     physics: {
-      stabilization: true
+      enabled: true,
+      solver: 'repulsion',
+      repulsion: {
+        nodeDistance: 250,  // SÚBELO MÁS para más separación
+        damping: 0.1
+      }
     }
   }
 
