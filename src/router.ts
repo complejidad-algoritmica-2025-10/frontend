@@ -6,15 +6,15 @@ import BipartitoGraphComponent from './graph/components/bipartito-graph.componen
 const routes = [
   {
     path: '/',
-    redirect: '/coactuacion'  // ruta por defecto
+    redirect: '/about'  // ruta por defecto
   },
   {
-    path: '/coactuacion',
+    path: '/collaborations',
     name: 'Coactuación',
     component: graphViewComponent
   },
   {
-    path: '/bipartito',
+    path: '/movie-staff',
     name: 'Bipartito',
     component: BipartitoGraphComponent
   }
