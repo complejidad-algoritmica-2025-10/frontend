@@ -1,10 +1,10 @@
 <template>
   <div class="card">
-    <pv-menubar :model="items">
+    <pv-menubar :model="items" class="custom-menubar">
       <template #start>
         <div class="flex items-center gap-2">
           <img src="../../assets/logo.svg" alt="Logo" class="h-3 w-3" />
-          <p class="font-bold text-lg vertical-align-middle">Pantalla Justa</p>
+          <p class="font-bold text-lg vertical-align-middle" style="color: white;">Pantalla Justa</p>
         </div>
       </template>
     </pv-menubar>
@@ -51,7 +51,21 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.card {
-  padding: 1rem;
+::v-deep(.p-menubar) {
+  background-color: #782A8C !important;
+}
+
+::v-deep(.p-menubar *){
+  color: white !important;
+}
+
+::v-deep(.p-menubar .p-badge) {
+  background-color: white;
+  color: #782A8C;
+}
+
+::v-deep(.p-menubar-root-list *:hover) {
+  background-color: #9658A5 !important;
+  color: white !important;
 }
 </style>
