@@ -1,16 +1,35 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Network } from 'vis-network'
+import { DataSet } from 'vis-data'
+import 'vis-network/styles/vis-network.css'
 import { fetchBipartiteGraph } from '../services/bipartite.service'
 import { Button, InputNumber } from 'primevue'
-import BipartiteGraphCanvasComponent from './bipartite-graph-canvas.component.vue'
 
-// Estado
-const nodes = ref([])
-const edges = ref([])
+const nodes = ref<any[]>([])
+const edges = ref<any[]>([])
 const loading = ref(false)
+const selectedCluster = ref(0)
+const networkContainer = ref<HTMLElement | null>(null)
+let network: Network | null = null
 
-// Esto será el número de cluster que el usuario elige
-const selectedCluster = ref(0) // Por ejemplo, 0 para el primer cluster
+const options = {
+  nodes: {
+    shape: 'dot',
+  },
+  edges: {
+    smooth: true,
+    arrows: { to: false },
+    color: '#ccc'
+  },
+  physics: {
+    enabled: true,
+    solver: 'repulsion',
+    repulsion: {
+      nodeDistance: 500
+    }
+  }
+}
 
 const loadBipartite = async () => {
   loading.value = true
@@ -19,6 +38,7 @@ const loadBipartite = async () => {
     if (data.clusters && data.clusters.length > selectedCluster.value) {
       nodes.value = data.clusters[selectedCluster.value].nodes
       edges.value = data.clusters[selectedCluster.value].edges
+      renderNetwork()
     } else {
       nodes.value = []
       edges.value = []
@@ -28,6 +48,36 @@ const loadBipartite = async () => {
     console.error(error)
   } finally {
     loading.value = false
+  }
+}
+
+const renderNetwork = () => {
+  if (!networkContainer.value) return
+
+
+  const visNodes = new DataSet(
+      nodes.value.map(n => ({
+        id: n.id,
+        color: n.gender === 'F' ? 'hotpink' : n.gender === 'M' ? 'royalblue' : 'yellow',
+        label: n.name || n.id
+      }))
+  )
+
+  const visEdges = new DataSet(
+      edges.value.map((e, i) => ({
+        id: `edge-${i}`,
+        from: e.source,
+        to: e.target,
+        width: Math.min(e.weight, 8),
+        color: '#999'
+      }))
+  )
+
+
+  if (network) {
+    network.setData({ nodes: visNodes, edges: visEdges })
+  } else {
+    network = new Network(networkContainer.value, { nodes: visNodes, edges: visEdges }, options)
   }
 }
 </script>
@@ -41,13 +91,12 @@ const loadBipartite = async () => {
 
     <Button @click="loadBipartite">Cargar Cluster</Button>
 
-    <BipartiteGraphCanvasComponent
-        v-if="!loading && nodes.length"
-        :nodes="nodes"
-        :edges="edges"
+    <div
+        ref="networkContainer"
+        style="width: 100%; height: 600px; border: 1px solid #ccc; margin-top: 20px;"
     />
 
-    <p v-else-if="loading">Cargando grafo bipartito...</p>
-    <p v-else>No hay datos para este cluster.</p>
+    <p v-if="loading">Cargando grafo bipartito...</p>
+    <p v-else-if="!loading && !nodes.length">No hay datos para este cluster.</p>
   </div>
 </template>
