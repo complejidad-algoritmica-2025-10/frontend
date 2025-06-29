@@ -4,10 +4,12 @@
 
     <div style="margin-bottom: 20px;">
       <label>Número de Cluster:</label>
-      <InputNumber
-          v-model="clusterInput"
-          :min="0"
-          placeholder="0, 1, 2, ..."
+      <Dropdown
+        v-model="clusterInput"
+        :options="clusterOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Selecciona un cluster"
       />
     </div>
 
@@ -30,30 +32,42 @@ import { fetchGraph } from '../services/projected.service.ts'
 import type { Node } from '../model/node.entity'
 import type { Edge } from '../model/edge.entity'
 import GraphCanvasComponent from './graph-canvas.component.vue'
-import { Button, InputNumber } from 'primevue'
+import { Button, Dropdown } from 'primevue'
 
 // Estado reactivo
 const nodes = ref<Node[]>([])
 const edges = ref<Edge[]>([])
 const loading = ref(false)
-const clusterInput = ref<number>(0) // Por defecto cluster 0
+const clusterInput = ref<number | null>(null) // Por defecto cluster 0
+
+//8, 9, 10, 17 (dropdown)
+
+const clusterOptions = Array.from({ length: 27 }, (_, i) => ({
+  label: `Cluster ${i + 1}`,
+  value: i + 1,
+}))
 
 // Función para cargar y mostrar solo el cluster elegido
 const loadGraph = async () => {
-  if (clusterInput.value < 0) {
+  if (clusterInput.value === null || clusterInput.value < 1 ) {
     alert('El número de cluster debe ser 0 o mayor')
     return
   }
 
+  
   loading.value = true
   try {
     // Llamada a tu backend (no necesita parámetros)
     const data = await fetchGraph()
+    console.log("DATOS")
+    console.log(data);
 
+
+    const index = clusterInput.value - 1
     // Validar y seleccionar el cluster deseado
-    if (data.clusters && data.clusters.length > clusterInput.value) {
-      nodes.value = data.clusters[clusterInput.value].nodes
-      edges.value = data.clusters[clusterInput.value].edges
+    if (data.clusters && data.clusters.length > index) {
+      nodes.value = data.clusters[index].nodes
+      edges.value = data.clusters[index].edges
     } else {
       nodes.value = []
       edges.value = []
