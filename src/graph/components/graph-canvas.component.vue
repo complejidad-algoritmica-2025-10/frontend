@@ -28,7 +28,7 @@ function renderGraph() {
 
   const nodes = props.nodes.map(n => ({
     id: n.id,
-    label: n.id,
+    label: n.name,
     color: n.gender === 'F' ? 'hotpink' : n.gender === 'M' ? 'royalblue' : 'mediumorchid',
     size: 15
   }))
@@ -43,9 +43,12 @@ function renderGraph() {
   const data = { nodes, edges }
 
   const options = {
+    layout: {
+    improvedLayout: false 
+    },
     nodes: {
       shape: 'dot',
-      scaling: { min: 10, max: 30 }
+      scaling: { min: 1000, max: 2000 }
     },
     edges: {
       smooth: true,
@@ -53,7 +56,12 @@ function renderGraph() {
       color: '#ccc'
     },
     physics: {
-      stabilization: true
+      enabled: true,
+      solver: 'repulsion',
+      repulsion: {
+        nodeDistance: 250,
+        damping: 0.1
+      }
     }
   }
 

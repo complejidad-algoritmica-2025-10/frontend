@@ -1,7 +1,7 @@
 
 
-export async function fetchBipartiteGraph(limit: any) {
-  const response = await fetch(`http://localhost:8000/bipartite-graph?limit=${limit}`)
+export async function fetchBipartiteGraph() {
+  const response = await fetch(`http://localhost:8000/bipartite`)
   if (!response.ok) {
     throw new Error(`Error al obtener el grafo bipartito: ${response.statusText}`)
   }

@@ -7,6 +7,7 @@ import 'primeicons/primeicons.css';
 import {PrimeVue} from "@primevue/core";
 import Material from '@primeuix/themes/material';
 import {
+    Avatar,
     Button,
     Card,
     Checkbox,
@@ -17,6 +18,7 @@ import {
     Dialog,
     DialogService,
     Drawer,
+    Dropdown,
     FileUpload,
     FloatLabel,
     IconField,
@@ -32,7 +34,7 @@ import {
     Textarea,
     Toast,
     ToastService,
-    Toolbar
+    Menubar
 } from "primevue";
 import App from "./App.vue";
 import router from './router'
@@ -44,6 +46,8 @@ app.use(PrimeVue, {theme: { preset: Material}, ripple: true})
     .use(ConfirmationService)
     .use(DialogService)
     .use(ToastService)
+    .component('pv-dropdown', Dropdown)
+    .component('pv-avatar',         Avatar)
     .component('pv-button',         Button)
     .component('pv-card',           Card)
     .component('pv-column',         Column)
@@ -65,6 +69,6 @@ app.use(PrimeVue, {theme: { preset: Material}, ripple: true})
     .component('pv-drawer',         Drawer)
     .component('pv-tag',            Tag)
     .component('pv-textarea',       Textarea)
-    .component('pv-toolbar',        Toolbar)
+    .component('pv-menubar',        Menubar)
     .component('pv-toast',          Toast)
     .mount('#app')
