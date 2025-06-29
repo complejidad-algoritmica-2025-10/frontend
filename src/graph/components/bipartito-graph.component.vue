@@ -82,7 +82,7 @@ const options = {
 };
 
 const clusterOptions = Array.from({ length: 27 }, (_, i) => ({
-  label: `Cluster ${i + 1}`,
+  label: `Cluster de película ${i}`,
   value: i,
 }));
 

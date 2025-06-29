@@ -28,7 +28,7 @@ function renderGraph() {
 
   const nodes = props.nodes.map(n => ({
     id: n.id,
-    label: n.id,
+    label: n.name,
     color: n.gender === 'F' ? 'hotpink' : n.gender === 'M' ? 'royalblue' : 'mediumorchid',
     size: 15
   }))
