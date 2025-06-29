@@ -46,6 +46,20 @@
 
           </p>
         </div>
+
+        <div>
+
+          <!--Grado de centralidad en el grafo-->
+          <div style="margin-top: 20px">
+            <h3 style="margin-bottom: 10px">Nodos con más conexiones</h3>
+            <ul style="font-size: 14px; color: #444; line-height: 1.5">
+              <li v-for="(nodo, index) in topNodesByDegree" :key="index">
+                {{ nodo.name }} – {{ nodo.degree }} conexiones - Género {{ nodo.gender}}
+              </li>
+            </ul>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
@@ -107,10 +121,33 @@ const updateSelectedCluster = () => {
     edges.value = []
     console.warn(`Cluster ${clusterInput.value} no encontrado.`)
   }
+
+  computeTopNodes()
 }
 
 const loadGraph = () => {
   updateSelectedCluster()
+}
+
+const topNodesByDegree = ref<{ name: string; degree: number }[]>([])
+
+const computeTopNodes = () => {
+  const degreeMap: Record<string, number> = {}
+
+  for (const edge of edges.value) {
+    degreeMap[edge.source] = (degreeMap[edge.source] || 0) + 1
+    degreeMap[edge.target] = (degreeMap[edge.target] || 0) + 1
+  }
+
+  const enrichedNodes = nodes.value.map(node => ({
+    name: node.name,
+    gender: node.gender,
+    degree: degreeMap[node.id] || 0
+  }))
+
+  topNodesByDegree.value = enrichedNodes
+      .sort((a, b) => b.degree - a.degree)
+      .slice(0, 3)
 }
 
 // Cargar una vez al montar
