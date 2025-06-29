@@ -5,6 +5,7 @@ import { DataSet } from 'vis-data'
 import 'vis-network/styles/vis-network.css'
 import { fetchBipartiteGraph } from '../services/bipartite.service'
 import { Button, InputNumber } from 'primevue'
+import LegendComponent from "./legend.component.vue";
 
 const nodes = ref<any[]>([])
 const edges = ref<any[]>([])
@@ -51,9 +52,18 @@ const loadBipartite = async () => {
   }
 }
 
+const categoryColors = {
+  director: 'green',
+  producer: 'orange',
+  actor: 'royalblue',
+  actress: 'hotpink',
+  writer: 'purple',
+  cinematographer: 'brown',
+  default: '#999'
+}
+
 const renderNetwork = () => {
   if (!networkContainer.value) return
-
 
   const visNodes = new DataSet(
       nodes.value.map(n => ({
@@ -72,10 +82,12 @@ const renderNetwork = () => {
         from: e.source,
         to: e.target,
         width: Math.min(e.weight, 8),
-        color: '#999'
+        color: {
+          color: categoryColors[e.category] || categoryColors.default
+        },
+        dashes: e.category === 'director' ? [5, 5] : false
       }))
   )
-
 
   if (network) {
     network.setData({ nodes: visNodes, edges: visEdges })
@@ -98,6 +110,8 @@ const renderNetwork = () => {
         ref="networkContainer"
         style="width: 100%; height: 600px; border: 1px solid #ccc; margin-top: 20px;"
     />
+
+    <LegendComponent/>
 
     <p v-if="loading">Cargando grafo bipartito...</p>
     <p v-else-if="!loading && !nodes.length">No hay datos para este cluster.</p>
