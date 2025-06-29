@@ -18,6 +18,7 @@ import {
     Dialog,
     DialogService,
     Drawer,
+    Dropdown,
     FileUpload,
     FloatLabel,
     IconField,
@@ -45,6 +46,7 @@ app.use(PrimeVue, {theme: { preset: Material}, ripple: true})
     .use(ConfirmationService)
     .use(DialogService)
     .use(ToastService)
+    .component('pv-dropdown', Dropdown)
     .component('pv-avatar',         Avatar)
     .component('pv-button',         Button)
     .component('pv-card',           Card)
