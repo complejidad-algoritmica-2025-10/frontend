@@ -58,8 +58,11 @@ const renderNetwork = () => {
   const visNodes = new DataSet(
       nodes.value.map(n => ({
         id: n.id,
-        color: n.gender === 'F' ? 'hotpink' : n.gender === 'M' ? 'royalblue' : 'yellow',
-        label: n.name || n.id
+        color: n.gender === 'F' ? 'hotpink'
+            : n.gender === 'M' ? 'royalblue'
+                : n.gender === 'U' ? 'mediumorchid'
+                    : 'yellow',
+        label: n.name
       }))
   )
 
