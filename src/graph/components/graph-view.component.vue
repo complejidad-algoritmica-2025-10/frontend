@@ -38,10 +38,12 @@
         <div style="margin-top: 20px">
           <h3 style="margin-bottom: 10px">Descripción</h3>
           <p style="line-height: 1.6; font-size: 14px; color: #555">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            dignissim, nisl sed dapibus gravida, libero odio faucibus nulla, at
-            gravida sapien lorem sed elit. Etiam feugiat lectus ut nisl
-            convallis, vitae ullamcorper risus pharetra.
+           Este grafo de coactuación representa las relaciones entre actores y actrices que han participado 
+           juntos en producciones cinematográficas dentro del clúster seleccionado. Cada nodo representa a una
+            persona, y cada arista indica que ambos compartieron créditos en una o más películas.
+             La visualización permite identificar comunidades de colaboración, patrones recurrentes 
+             y posibles figuras centrales dentro del ámbito actoral.
+
           </p>
         </div>
       </div>
