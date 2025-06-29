@@ -59,7 +59,7 @@ function renderGraph() {
       enabled: true,
       solver: 'repulsion',
       repulsion: {
-        nodeDistance: 250,  // SÚBELO MÁS para más separación
+        nodeDistance: 250,
         damping: 0.1
       }
     }

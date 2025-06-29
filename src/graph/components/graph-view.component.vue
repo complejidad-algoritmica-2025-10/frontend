@@ -109,8 +109,6 @@ const updateSelectedCluster = () => {
   }
 }
 
-
-// Método expuesto al botón (por si lo necesitas)
 const loadGraph = () => {
   updateSelectedCluster()
 }

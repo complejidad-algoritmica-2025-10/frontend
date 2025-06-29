@@ -52,7 +52,7 @@ const updateCounts = () => {
     for (const gender in rawCounts[role]) {
       percentages[role][gender] = parseFloat(
         ((rawCounts[role][gender] / total) * 100).toFixed(1)
-      ); // Porcentaje con 1 decimal
+      );
     }
   }
 
