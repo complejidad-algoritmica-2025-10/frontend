@@ -4,7 +4,7 @@ import { Network } from 'vis-network'
 import { DataSet } from 'vis-data'
 import 'vis-network/styles/vis-network.css'
 import { fetchBipartiteGraph } from '../services/bipartite.service'
-import { Button, InputNumber } from 'primevue'
+import { Button, Dropdown } from 'primevue'
 import LegendComponent from "./legend.component.vue";
 
 const nodes = ref<any[]>([])
@@ -15,6 +15,9 @@ const networkContainer = ref<HTMLElement | null>(null)
 let network: Network | null = null
 
 const options = {
+  layout: {
+    improvedLayout: false 
+  },
   nodes: {
     shape: 'dot',
   },
@@ -32,7 +35,18 @@ const options = {
   }
 }
 
+const clusterOptions = Array.from({ length: 27 }, (_, i) => ({
+  label: `Cluster ${i + 1}`,
+  value: i,
+}))
+
+clusterOptions[0].label = 'Grafo completo'
+
 const loadBipartite = async () => {
+   if (selectedCluster.value === null) {
+    alert('Selecciona un cluster válido')
+    return
+  }
   loading.value = true
   try {
     const data = await fetchBipartiteGraph()
@@ -101,19 +115,55 @@ const renderNetwork = () => {
   <div>
     <h2>Grafo Bipartito</h2>
 
-    <label>Selecciona Cluster:</label>
-    <InputNumber v-model="selectedCluster" :min="0" />
-
-    <Button @click="loadBipartite">Cargar Cluster</Button>
-
     <div
-        ref="networkContainer"
-        style="width: 100%; height: 600px; border: 1px solid #ccc; margin-top: 20px;"
-    />
+      style="
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 20px;
+      "
+    >
+      <!-- Contenedor del grafo -->
+      <div style="flex: 1; max-width: 1000px">
+        <div
+          ref="networkContainer"
+          style="width: 100%; height: 600px; border: 1px solid #ccc;"
+        />
+        <div v-if="loading || (!loading && !nodes.length)" style="margin-top: 10px">
+          <p v-if="loading">Cargando grafo bipartito...</p>
+          <p v-else>No hay datos para este cluster.</p>
+        </div>
+      </div>
 
-    <LegendComponent/>
+      <!-- Controles y leyenda -->
+      <div style="width: 450px">
+        <label>Número de Cluster:</label>
+        <Dropdown
+          v-model="selectedCluster"
+          :options="clusterOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecciona un cluster"
+          style="width: 100%; margin-bottom: 10px"
+          class="mi-dropdown"
+        />
+        <Button @click="loadBipartite" label="Mostrar" style="width: 100%" />
 
-    <p v-if="loading">Cargando grafo bipartito...</p>
-    <p v-else-if="!loading && !nodes.length">No hay datos para este cluster.</p>
+        <div style="margin-top: 20px">
+          <h3 style="margin-bottom: 10px">Descripción</h3>
+          <p style="line-height: 1.6; font-size: 14px; color: #555">
+            Este grafo bipartito representa la interacción entre distintos
+            participantes del clúster seleccionado. Cada nodo representa una persona,
+            y los colores indican género o categoría. Las aristas indican co-participación,
+            ponderadas por la cantidad de relaciones entre ellos.
+          </p>
+        </div>
+
+        <div style="margin-top: 20px">
+          <LegendComponent />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+

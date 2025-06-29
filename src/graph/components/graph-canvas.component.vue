@@ -43,6 +43,9 @@ function renderGraph() {
   const data = { nodes, edges }
 
   const options = {
+    layout: {
+    improvedLayout: false 
+    },
     nodes: {
       shape: 'dot',
       scaling: { min: 1000, max: 2000 }
