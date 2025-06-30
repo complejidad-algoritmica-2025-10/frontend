@@ -113,15 +113,16 @@ const loadBipartite = async () => {
   }
 };
 
-const categoryColors = {
-  director: "green",
-  producer: "orange",
-  actor: "royalblue",
-  actress: "hotpink",
-  writer: "purple",
-  cinematographer: "brown",
-  default: "#999",
+const categoryColors: Record<string, string> = {
+  director: '#123',
+  producer: '#234',
+  actor: '#345',
+  actress: '#456',
+  writer: '#567',
+  cinematographer: '#678',
+  default: '#999',
 };
+
 
 const renderNetwork = () => {
   if (!networkContainer.value) return;

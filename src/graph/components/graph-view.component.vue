@@ -129,7 +129,7 @@ const loadGraph = () => {
   updateSelectedCluster()
 }
 
-const topNodesByDegree = ref<{ name: string; degree: number }[]>([])
+const topNodesByDegree = ref<{ name: string; degree: number ; gender: string}[]>([])
 
 const computeTopNodes = () => {
   const degreeMap: Record<string, number> = {}
